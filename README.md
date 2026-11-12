@@ -27,20 +27,23 @@ With blank Supabase keys, the poll runs in demo mode. Votes stay in one browser,
 ### 2. Write your questions
 Edit the `questions` list in `config.js`. Each question can have up to 12 choices. Keep the choices short, because they need to fit on one line of the slide.
 
-### 3. Put the folder online
-1. Sign in at app.netlify.com. You need an account, because Netlify deletes unclaimed drops after an hour.
-2. Open **Sites > Add new site > Deploy manually**.
-3. Drag the whole `LivePoll` folder onto the page.
-4. Under **Site configuration > Change site name**, pick a short name such as `tf-poll`. The QR code points to that address.
+### 3. Put the folder online (GitHub Pages)
+This folder is its own git repo: `ZachMo/tfsurveys`. Everything in it is public, so keep the admin code out of it.
 
-After each change to `config.js`, drag the folder onto the site's **Deploys** tab again.
+To publish a change, commit and push:
+```
+git add -A
+git commit -m "New questions"
+git push
+```
+GitHub publishes in about a minute, but browsers can keep the old copy for up to 10 minutes. Change questions well before a talk.
 
 ### 3b. Connect tfsurveys.com
-1. In Netlify, open **Domain management > Add a domain** and enter `tfsurveys.com`.
-2. Point the domain at Netlify in one of two ways:
-   - **Netlify DNS (easiest):** at your registrar, replace the nameservers with the four that Netlify lists.
-   - **Keep your registrar's DNS:** add an `A` record for `@` → `75.2.60.5` and a `CNAME` for `www` → `YOUR-SITE.netlify.app`.
-3. Wait until Netlify shows **HTTPS: certificate active**. This can take from minutes up to a day. The PowerPoint Web Viewer needs HTTPS.
+1. At your registrar, add these DNS records:
+   - `A` records for `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
+   - `CNAME` for `www` → `zachmo.github.io`
+2. In the repo, open **Settings > Pages**. Check that the custom domain reads `tfsurveys.com`.
+3. When the certificate is ready, tick **Enforce HTTPS**. This can take from minutes up to a day. The PowerPoint Web Viewer needs HTTPS.
 
 `config.js` already points the QR code at `https://tfsurveys.com`. If you choose a subdomain instead, such as `poll.tfsurveys.com`, change `voteUrl` to match.
 
