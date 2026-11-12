@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Live Poll Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Light by default so a projector looks the same on any laptop. Add ?theme=dark for dark slides. */
+:root{
+  --navy:#15467A;--navy-dark:#0F355D;--orange:#F2852F;--green:#349A03;
+  --bg:#FFFFFF;--ink:#1E2733;--muted:#5E6B7A;--track:#ECF2F9;--bar:#15467A;--lead:#F2852F;--panel:#F4F7FB;--line:#DCE3EC;
+  --u:min(1vw,1.778vh);
+}
+:root[data-theme="dark"]{--bg:#0E1622;--ink:#EEF2F7;--muted:#9AA8B8;--track:#1E2B3B;--bar:#5B8FD0;--panel:#172231;--line:#2A3747}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
+.stage{height:100%;display:grid;grid-template-columns:1fr auto;gap:calc(var(--u)*4);padding:calc(var(--u)*4) calc(var(--u)*4.5);align-items:center}
+.stage.noqr{grid-template-columns:1fr}
+.eyebrow{display:flex;align-items:center;gap:calc(var(--u)*1.2);font-size:calc(var(--u)*1.6);font-weight:600;color:var(--orange);text-transform:uppercase;letter-spacing:.12em;margin-bottom:calc(var(--u)*1.4)}
+.chip{font-size:calc(var(--u)*1.3);letter-spacing:.06em;padding:calc(var(--u)*.35) calc(var(--u)*1);border-radius:999px;background:var(--track);color:var(--muted)}
+.chip.on{background:#E6F4DD;color:#256E02}
+.chip.on::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--green);margin-right:.5em;vertical-align:.05em;animation:blink 1.4s infinite}
+@keyframes blink{50%{opacity:.25}}
+h1{font-size:calc(var(--u)*3.6);line-height:1.15;font-weight:700;margin-bottom:calc(var(--u)*3)}
+.bars{display:grid;gap:calc(var(--u)*1.6)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) calc(var(--u)*13);align-items:end;gap:calc(var(--u)*1.5)}
+.label{font-size:calc(var(--u)*2.1);font-weight:500;margin-bottom:calc(var(--u)*.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track{height:calc(var(--u)*3.2);border-radius:calc(var(--u)*.8);background:var(--track);overflow:hidden}
+.fill{height:100%;width:0;background:var(--bar);border-radius:inherit;transition:width .7s cubic-bezier(.2,.8,.2,1),background .3s}
+.row.lead .fill{background:var(--lead)}
+.num{text-align:right;line-height:1}
+.pct{font-size:calc(var(--u)*3.2);font-weight:700;font-variant-numeric:tabular-nums}
+.cnt{display:block;font-size:calc(var(--u)*1.4);color:var(--muted);margin-top:calc(var(--u)*.4);font-variant-numeric:tabular-nums}
+.total{margin-top:calc(var(--u)*2.6);font-size:calc(var(--u)*1.8);color:var(--muted)}
+.total b{color:var(--ink);font-size:calc(var(--u)*2.4);font-variant-numeric:tabular-nums}
+.qr{background:var(--panel);border:1px solid var(--line);border-radius:calc(var(--u)*2);padding:calc(var(--u)*2.2);text-align:center;width:calc(var(--u)*30)}
+.qrbox svg{display:block;width:100%;height:auto;border-radius:calc(var(--u)*.8)}
+.scan{font-size:calc(var(--u)*2.4);font-weight:700;margin-top:calc(var(--u)*1.6);color:var(--ink)}
+.url{font-size:calc(var(--u)*1.35);color:var(--muted);margin-top:calc(var(--u)*.5);word-break:break-all}
+/* Join screen */
+.join .qr{width:calc(var(--u)*38)}
+.join h1{font-size:calc(var(--u)*5);margin-bottom:calc(var(--u)*1.6)}
+.join p.lede{font-size:calc(var(--u)*2.4);color:var(--muted);max-width:28ch;line-height:1.35}
+.warn{position:fixed;left:0;right:0;bottom:0;background:#FFF3E8;color:#7A3D07;font-size:calc(var(--u)*1.3);padding:calc(var(--u)*.6) calc(var(--u)*2);text-align:center}
+@media (prefers-reduced-motion: reduce){.fill{transition:none}.chip.on::before{animation:none}}
+</style>
+</head>
+<body>
+<main id="stage" class="stage"></main>
+<div id="warn" class="warn" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="poll.js"></script>
+<script>
+// URL options:
+//   ?q=2        show question 2 (q=0 shows the join screen)
+//   &key=CODE   also make that question the live one on everyone's phone
+//   &qr=0       hide the QR panel
+//   &theme=dark dark slide
+const P = new URLSearchParams(location.search);
+const Q = Poll.questions;
+const fixedQ = P.has('q') ? Number(P.get('q')) - 1 : null;   // -1 = join screen
+const key = P.get('key');
+const showQr = P.get('qr') !== '0';
+if (P.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
+
+const stage = document.getElementById('stage');
+const warnEl = document.getElementById('warn');
+const voteUrl = Poll.voteUrl();
+const qrHtml = (() => { try { return Poll.qrSvg(voteUrl); } catch (e) { return ''; } })();
+const shortUrl = voteUrl.replace(/^https?:\/\//, '').replace(/\/(index\.html)?$/, '');
+let current = null, shown = undefined;
+
+function warn(msg) { warnEl.hidden = !msg; warnEl.textContent = msg || ''; }
+if (!Poll.live) warn(location.protocol === 'file:'
+  ? 'Demo mode. Phones cannot open files on this laptop, so the QR code works only after you host the folder.'
+  : 'Demo mode: votes stay in this browser. Add Supabase keys in config.js to go live.');
+
+function qrPanel() {
+  return showQr ? `<aside class="qr"><div class="qrbox">${qrHtml}</div>
+    <div class="scan">Scan to vote</div><div class="url">${Poll.esc(shortUrl)}</div></aside>` : '';
+}
+
+function renderJoin() {
+  stage.className = 'stage join' + (showQr ? '' : ' noqr');
+  stage.innerHTML = `<section><div class="eyebrow">Live poll</div>
+    <h1>${Poll.esc(Poll.config.title || 'Live Poll')}</h1>
+    <p class="lede">Scan the code with your phone camera. The questions will show up as we go.</p></section>${qrPanel()}`;
+}
+
+function renderQuestion(qi) {
+  const q = Q[qi];
+  stage.className = 'stage' + (showQr ? '' : ' noqr');
+  stage.innerHTML = `<section>
+    <div class="eyebrow">Question ${qi + 1} of ${Q.length} <span id="chip" class="chip"></span></div>
+    <h1>${Poll.esc(q.text)}</h1>
+    <div class="bars">${q.choices.map((c, i) => `<div class="row" data-i="${i}">
+      <div><div class="label">${Poll.esc(c)}</div><div class="track"><div class="fill"></div></div></div>
+      <div class="num"><span class="pct">0%</span><span class="cnt">0 votes</span></div></div>`).join('')}</div>
+    <div class="total"><b id="total">0</b> <span id="totalWord">responses</span></div></section>${qrPanel()}`;
+}
+
+function paint(qi, counts) {
+  const c = counts[qi] || {};
+  const n = Q[qi].choices.map((_, i) => c[i] || 0);
+  const total = n.reduce((a, b) => a + b, 0);
+  const max = Math.max(...n);
+  stage.querySelectorAll('.row').forEach((row, i) => {
+    const p = total ? Math.round(n[i] / total * 100) : 0;
+    row.querySelector('.fill').style.width = (max ? n[i] / max * 100 : 0) + '%';
+    row.querySelector('.pct').textContent = p + '%';
+    row.querySelector('.cnt').textContent = n[i] + (n[i] === 1 ? ' vote' : ' votes');
+    row.classList.toggle('lead', total > 0 && n[i] === max);
+  });
+  document.getElementById('total').textContent = total;
+  document.getElementById('totalWord').textContent = total === 1 ? 'response' : 'responses';
+  const chip = document.getElementById('chip');
+  const open = current === qi;
+  chip.className = 'chip' + (open ? ' on' : '');
+  chip.textContent = open ? 'Voting open' : 'Voting closed';
+}
+
+async function refresh() {
+  try {
+    current = await Poll.current();
+    const qi = fixedQ != null ? fixedQ : current;
+    if (qi == null || qi < 0 || !Q[qi]) {
+      if (shown !== -1) { shown = -1; renderJoin(); }
+      return;
+    }
+    if (shown !== qi) { shown = qi; renderQuestion(qi); }
+    paint(qi, await Poll.counts(qi));
+    if (Poll.live) warn('');
+  } catch (e) {
+    warn('Cannot reach the poll server. Retrying…');
+  }
+}
+
+async function start() {
+  if (!Poll.ready) { warn('The Supabase library did not load. Check the internet connection.'); return; }
+  if (key && fixedQ != null) {
+    try {
+      const r = await Poll.setCurrent(key, fixedQ >= 0 && Q[fixedQ] ? fixedQ : -1);
+      if (r !== 'ok') warn('The admin code in this link is wrong, so phones did not switch questions.');
+    } catch (e) { warn('Could not open this question for voting. Retrying the results…'); }
+  }
+  await refresh();
+  Poll.subscribe(refresh);
+}
+start();
+</script>
+</body>
+</html>
