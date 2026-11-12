@@ -9,42 +9,43 @@
 <style>
 /* Light by default so a projector looks the same on any laptop. Add ?theme=dark for dark slides. */
 :root{
-  --navy:#15467A;--navy-dark:#0F355D;--orange:#F2852F;--green:#349A03;
-  --bg:#FFFFFF;--ink:#1E2733;--muted:#5E6B7A;--track:#ECF2F9;--bar:#15467A;--lead:#F2852F;--panel:#F4F7FB;--line:#DCE3EC;
+  --navy:#183A78;--orange:#FF832B;--green:#2E7D0A;
+  --bg:#FFFFFF;--ink:#1B2433;--head:#183A78;--muted:#5A6678;--track:#EAEFF7;--bar:#183A78;--lead:#FF832B;--panel:#F3F6FB;--line:#D8E0EC;
   --u:min(1vw,1.778vh);
 }
-:root[data-theme="dark"]{--bg:#0E1622;--ink:#EEF2F7;--muted:#9AA8B8;--track:#1E2B3B;--bar:#5B8FD0;--panel:#172231;--line:#2A3747}
+:root[data-theme="dark"]{--bg:#0D1526;--ink:#EEF2F8;--head:#FFFFFF;--muted:#A0ACC0;--track:#1D2A45;--bar:#5D86D6;--panel:#16213A;--line:#2A3854}
 *{box-sizing:border-box;margin:0}
 html,body{height:100%}
 body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--ink);overflow:hidden}
-.stage{height:100%;display:grid;grid-template-columns:1fr auto;gap:calc(var(--u)*4);padding:calc(var(--u)*4) calc(var(--u)*4.5);align-items:center}
+.stage{height:100%;display:grid;grid-template-columns:1fr auto;gap:calc(var(--u)*4);padding:calc(var(--u)*3.5) calc(var(--u)*4.5);align-items:center}
 .stage.noqr{grid-template-columns:1fr}
-.eyebrow{display:flex;align-items:center;gap:calc(var(--u)*1.2);font-size:calc(var(--u)*1.6);font-weight:600;color:var(--orange);text-transform:uppercase;letter-spacing:.12em;margin-bottom:calc(var(--u)*1.4)}
+.eyebrow{display:flex;align-items:center;gap:calc(var(--u)*1.2);font-size:calc(var(--u)*1.6);font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:.12em;margin-bottom:calc(var(--u)*1.2)}
 .chip{font-size:calc(var(--u)*1.3);letter-spacing:.06em;padding:calc(var(--u)*.35) calc(var(--u)*1);border-radius:999px;background:var(--track);color:var(--muted)}
-.chip.on{background:#E6F4DD;color:#256E02}
+.chip.on{background:#E3F2DA;color:#25650A}
 .chip.on::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--green);margin-right:.5em;vertical-align:.05em;animation:blink 1.4s infinite}
 @keyframes blink{50%{opacity:.25}}
-h1{font-size:calc(var(--u)*3.6);line-height:1.15;font-weight:700;margin-bottom:calc(var(--u)*3)}
-.bars{display:grid;gap:calc(var(--u)*1.6)}
-.row{display:grid;grid-template-columns:minmax(0,1fr) calc(var(--u)*13);align-items:end;gap:calc(var(--u)*1.5)}
-.label{font-size:calc(var(--u)*2.1);font-weight:500;margin-bottom:calc(var(--u)*.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.track{height:calc(var(--u)*3.2);border-radius:calc(var(--u)*.8);background:var(--track);overflow:hidden}
+h1{font-size:calc(var(--u)*3.5);line-height:1.15;font-weight:700;color:var(--head);margin-bottom:calc(var(--u)*2.6)}
+.bars{display:grid;gap:calc(var(--u)*1.4)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) calc(var(--u)*9);align-items:end;gap:calc(var(--u)*1.5)}
+.label{font-size:calc(var(--u)*2);font-weight:500;margin-bottom:calc(var(--u)*.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track{height:calc(var(--u)*2.8);border-radius:calc(var(--u)*.7);background:var(--track);overflow:hidden}
 .fill{height:100%;width:0;background:var(--bar);border-radius:inherit;transition:width .7s cubic-bezier(.2,.8,.2,1),background .3s}
 .row.lead .fill{background:var(--lead)}
-.num{text-align:right;line-height:1}
-.pct{font-size:calc(var(--u)*3.2);font-weight:700;font-variant-numeric:tabular-nums}
-.cnt{display:block;font-size:calc(var(--u)*1.4);color:var(--muted);margin-top:calc(var(--u)*.4);font-variant-numeric:tabular-nums}
-.total{margin-top:calc(var(--u)*2.6);font-size:calc(var(--u)*1.8);color:var(--muted)}
-.total b{color:var(--ink);font-size:calc(var(--u)*2.4);font-variant-numeric:tabular-nums}
+.pct{text-align:right;line-height:1;font-size:calc(var(--u)*3.4);font-weight:700;color:var(--head);font-variant-numeric:tabular-nums}
+.row.lead .pct{color:var(--orange)}
 .qr{background:var(--panel);border:1px solid var(--line);border-radius:calc(var(--u)*2);padding:calc(var(--u)*2.2);text-align:center;width:calc(var(--u)*30)}
+/* The logo has dark gray lettering, so it sits on a white plate in dark mode. */
+.logo{display:block;width:100%;height:auto;background:#fff;border-radius:calc(var(--u)*1);padding:calc(var(--u)*.8)}
+.qr .logo{margin-bottom:calc(var(--u)*1.8)}
 .qrbox svg{display:block;width:100%;height:auto;border-radius:calc(var(--u)*.8)}
-.scan{font-size:calc(var(--u)*2.4);font-weight:700;margin-top:calc(var(--u)*1.6);color:var(--ink)}
-.url{font-size:calc(var(--u)*1.35);color:var(--muted);margin-top:calc(var(--u)*.5);word-break:break-all}
+.scan{font-size:calc(var(--u)*2.4);font-weight:700;margin-top:calc(var(--u)*1.4);color:var(--head)}
+.url{font-size:calc(var(--u)*1.6);font-weight:600;color:var(--orange);margin-top:calc(var(--u)*.4);word-break:break-all}
 /* Join screen */
-.join .qr{width:calc(var(--u)*38)}
-.join h1{font-size:calc(var(--u)*5);margin-bottom:calc(var(--u)*1.6)}
-.join p.lede{font-size:calc(var(--u)*2.4);color:var(--muted);max-width:28ch;line-height:1.35}
-.warn{position:fixed;left:0;right:0;bottom:0;background:#FFF3E8;color:#7A3D07;font-size:calc(var(--u)*1.3);padding:calc(var(--u)*.6) calc(var(--u)*2);text-align:center}
+.join .qr{width:calc(var(--u)*36)}
+.join .hero{width:calc(var(--u)*52);margin:0 0 calc(var(--u)*4) calc(var(--u)*-.8)}
+.join h1{font-size:calc(var(--u)*4.8);margin-bottom:calc(var(--u)*1.4)}
+.join p.lede{font-size:calc(var(--u)*2.4);color:var(--muted);max-width:30ch;line-height:1.35}
+.warn{position:fixed;left:0;right:0;bottom:0;background:#FFF1E6;color:#7A3A0A;font-size:calc(var(--u)*1.3);padding:calc(var(--u)*.6) calc(var(--u)*2);text-align:center}
 @media (prefers-reduced-motion: reduce){.fill{transition:none}.chip.on::before{animation:none}}
 </style>
 </head>
@@ -81,16 +82,19 @@ if (!Poll.live) warn(location.protocol === 'file:'
   ? 'Demo mode. Phones cannot open files on this laptop, so the QR code works only after you host the folder.'
   : 'Demo mode: votes stay in this browser. Add Supabase keys in config.js to go live.');
 
-function qrPanel() {
-  return showQr ? `<aside class="qr"><div class="qrbox">${qrHtml}</div>
+const logoSrc = Poll.config.logo || '';
+const logoImg = cls => logoSrc ? `<img class="logo ${cls || ''}" src="${Poll.esc(logoSrc)}" alt="Transfinder Navigator Forum">` : '';
+
+function qrPanel(withLogo) {
+  return showQr ? `<aside class="qr">${withLogo ? logoImg() : ''}<div class="qrbox">${qrHtml}</div>
     <div class="scan">Scan to vote</div><div class="url">${Poll.esc(shortUrl)}</div></aside>` : '';
 }
 
 function renderJoin() {
   stage.className = 'stage join' + (showQr ? '' : ' noqr');
-  stage.innerHTML = `<section><div class="eyebrow">Live poll</div>
-    <h1>${Poll.esc(Poll.config.title || 'Live Poll')}</h1>
-    <p class="lede">Scan the code with your phone camera. The questions will show up as we go.</p></section>${qrPanel()}`;
+  stage.innerHTML = `<section>${logoImg('hero')}
+    <h1>Join the live poll</h1>
+    <p class="lede">Scan the code with your phone camera. The questions will show up as we go.</p></section>${qrPanel(false)}`;
 }
 
 function renderQuestion(qi) {
@@ -101,24 +105,21 @@ function renderQuestion(qi) {
     <h1>${Poll.esc(q.text)}</h1>
     <div class="bars">${q.choices.map((c, i) => `<div class="row" data-i="${i}">
       <div><div class="label">${Poll.esc(c)}</div><div class="track"><div class="fill"></div></div></div>
-      <div class="num"><span class="pct">0%</span><span class="cnt">0 votes</span></div></div>`).join('')}</div>
-    <div class="total"><b id="total">0</b> <span id="totalWord">responses</span></div></section>${qrPanel()}`;
+      <div class="pct">0%</div></div>`).join('')}</div></section>${qrPanel(true)}`;
 }
 
+// Percentages only: no vote counts on the slide. Each bar's length is its percentage.
 function paint(qi, counts) {
   const c = counts[qi] || {};
   const n = Q[qi].choices.map((_, i) => c[i] || 0);
   const total = n.reduce((a, b) => a + b, 0);
   const max = Math.max(...n);
   stage.querySelectorAll('.row').forEach((row, i) => {
-    const p = total ? Math.round(n[i] / total * 100) : 0;
-    row.querySelector('.fill').style.width = (max ? n[i] / max * 100 : 0) + '%';
-    row.querySelector('.pct').textContent = p + '%';
-    row.querySelector('.cnt').textContent = n[i] + (n[i] === 1 ? ' vote' : ' votes');
+    const share = total ? n[i] / total * 100 : 0;
+    row.querySelector('.fill').style.width = share + '%';
+    row.querySelector('.pct').textContent = Math.round(share) + '%';
     row.classList.toggle('lead', total > 0 && n[i] === max);
   });
-  document.getElementById('total').textContent = total;
-  document.getElementById('totalWord').textContent = total === 1 ? 'response' : 'responses';
   const chip = document.getElementById('chip');
   const open = current === qi;
   chip.className = 'chip' + (open ? ' on' : '');

@@ -1,4 +1,4 @@
-// Live Poll settings. Edit this file, then upload the folder again.
+// Live Poll settings. Edit this file, then commit and push.
 window.POLL_CONFIG = {
   // From Supabase: Project Settings > API. Leave both blank to run in demo mode.
   supabaseUrl: "https://digmbupopvskkwwijktc.supabase.co",      // like "https://abcdefgh.supabase.co"
@@ -7,22 +7,31 @@ window.POLL_CONFIG = {
   // The address in the QR code. Blank = the folder this page is served from.
   voteUrl: "https://tfsurveys.com",
 
-  title: "Transfinder Live Poll",
+  title: "Navigator Forum Live Poll",
+  logo: "navigator-forum-logo.png",
 
   // Your questions, in slide order. Up to 12 choices each.
   // After you change the questions, clear the old results in admin.html.
   questions: [
     {
-      text: "How do you plan routes today?",
-      choices: ["Routing software", "Spreadsheets", "Paper maps", "A mix"]
+      text: "What Is Your Current Technology State?",
+      choices: ["Minimal", "Basic", "Proficient", "Advanced", "Maximalist"]
     },
     {
-      text: "What is your biggest transportation challenge?",
-      choices: ["Driver shortage", "Rising costs", "Parent communication", "Late buses"]
+      text: "How Frequently Do You Log Into Routefinder PLUS?",
+      choices: ["Daily", "Often", "Sometimes", "Rarely", "Never"]
     },
     {
-      text: "How do parents learn a bus is running late?",
-      choices: ["Parent app", "Phone calls", "Social media", "They don't"]
+      text: "What Matters Most on Your Roadmap?",
+      choices: ["GPS Tracking", "Parent App", "Tablet Navigation", "Student Ridership", "Other"]
+    },
+    {
+      text: "Who Drives Technology Demand at Your District?",
+      choices: ["Transportation", "Drivers", "Parents", "Schools and Admin", "IT"]
+    },
+    {
+      text: "One Thing You'd Most Like to Improve?",
+      choices: ["Route Efficiency & Planning", "Real-Time Visibility", "Driver Tools and Execution", "Parent & District Communication", "Making Data-Driven Decisions"]
     }
   ]
 };
