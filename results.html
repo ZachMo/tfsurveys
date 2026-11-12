@@ -58,15 +58,15 @@ h1{font-size:calc(var(--u)*3.5);line-height:1.15;font-weight:700;color:var(--hea
 <script src="config.js"></script>
 <script src="poll.js"></script>
 <script>
+// Usually opened through tfsurveys.com/q1, /q2 ... (small files that forward here).
 // URL options:
-//   ?q=2        show question 2 (q=0 shows the join screen)
-//   &key=CODE   also make that question the live one on everyone's phone
+//   ?q=2        show question 2 and make it live on every phone (q=0: join screen, voting closed)
+//   no ?q       follow whichever question is live
 //   &qr=0       hide the QR panel
 //   &theme=dark dark slide
 const P = new URLSearchParams(location.search);
 const Q = Poll.questions;
 const fixedQ = P.has('q') ? Number(P.get('q')) - 1 : null;   // -1 = join screen
-const key = P.get('key');
 const showQr = P.get('qr') !== '0';
 if (P.get('theme') === 'dark') document.documentElement.dataset.theme = 'dark';
 
@@ -144,11 +144,10 @@ async function refresh() {
 
 async function start() {
   if (!Poll.ready) { warn('The Supabase library did not load. Check the internet connection.'); return; }
-  if (key && fixedQ != null) {
-    try {
-      const r = await Poll.setCurrent(key, fixedQ >= 0 && Q[fixedQ] ? fixedQ : -1);
-      if (r !== 'ok') warn('The admin code in this link is wrong, so phones did not switch questions.');
-    } catch (e) { warn('Could not open this question for voting. Retrying the results…'); }
+  // A question link makes its question live on every phone.
+  if (fixedQ != null) {
+    try { await Poll.show(fixedQ >= 0 && Q[fixedQ] ? fixedQ : -1); }
+    catch (e) { warn('Could not open this question for voting. Retrying…'); }
   }
   await refresh();
   Poll.subscribe(refresh);

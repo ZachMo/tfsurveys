@@ -9,60 +9,49 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#183A78;--navy-dark:#122C5C;--orange:#FF832B;--green:#349A03;--red:#E21837;
-  --bg:#F4F7FB;--card:#FFFFFF;--ink:#1E2733;--muted:#5E6B7A;--line:#DCE3EC;--soft:#ECF2F9;
+  --navy:#183A78;--orange:#FF832B;--red:#D0182F;--green:#2E7D0A;
+  --bg:#F3F6FB;--card:#FFFFFF;--ink:#1B2433;--muted:#5A6678;--line:#D8E0EC;--soft:#EAEFF7;--head:#183A78;
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){--bg:#0E1622;--card:#172231;--ink:#EEF2F7;--muted:#9AA8B8;--line:#2A3747;--soft:#1E2B3B}
+  :root:not([data-theme="light"]){--bg:#0D1526;--card:#16213A;--ink:#EEF2F8;--muted:#A0ACC0;--line:#2A3854;--soft:#1D2A45;--head:#FFFFFF;--red:#FF6B7D}
 }
-:root[data-theme="dark"]{--bg:#0E1622;--card:#172231;--ink:#EEF2F7;--muted:#9AA8B8;--line:#2A3747;--soft:#1E2B3B}
+:root[data-theme="dark"]{--bg:#0D1526;--card:#16213A;--ink:#EEF2F8;--muted:#A0ACC0;--line:#2A3854;--soft:#1D2A45;--head:#FFFFFF;--red:#FF6B7D}
 *{box-sizing:border-box;margin:0}
 body{font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px}
-header{background:var(--navy-dark);color:#fff;padding:14px 16px;border-bottom:4px solid var(--orange);display:flex;align-items:center;gap:12px}
-header h1{font-size:18px;font-weight:600;flex:1}
-header .mode{font-size:12px;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.15)}
-main{max-width:920px;margin:0 auto;padding:20px 16px 48px;display:grid;gap:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+/* The logo has dark gray lettering, so its strip stays white in dark mode too. */
+header{background:#fff;padding:12px 16px;border-bottom:4px solid var(--orange);display:flex;align-items:center;justify-content:center}
+header img{height:48px;width:auto}
+main{max-width:640px;margin:0 auto;padding:24px 16px 48px;display:grid;gap:16px}
+h1{font-size:22px;color:var(--head)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
 .card h2{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;margin-bottom:12px}
-.kpis{display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end}
-.kpi b{display:block;font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
-.kpi span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.kpis .actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
-button,.btn{font:500 14px Outfit,system-ui,sans-serif;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:8px 12px;cursor:pointer;white-space:nowrap}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.card h2 + .row{border-top:0}
+.row .n{flex:none;width:28px;font-weight:700;color:var(--orange)}
+.row .t{flex:1;min-width:0}
+.row .c{flex:none;font-weight:700;font-variant-numeric:tabular-nums;color:var(--head);min-width:3ch;text-align:right}
+.row a{color:var(--head);font-weight:600;text-decoration:none}
+.row a:hover{text-decoration:underline}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+button{font:600 15px Outfit,system-ui,sans-serif;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:10px 16px;cursor:pointer}
 button:hover{border-color:var(--navy)}
-button.primary{background:var(--navy);border-color:var(--navy);color:#fff}
-button.danger{color:var(--red)}
-button.armed{background:var(--red);border-color:var(--red);color:#fff}
 button:disabled{opacity:.5;cursor:default}
-table{width:100%;border-collapse:collapse}
-th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
-td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
-td.n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600;width:70px}
-td.btns{text-align:right;white-space:nowrap;width:1%}
-td.btns button{margin-left:6px}
-tr.live td:first-child{box-shadow:inset 4px 0 0 var(--green)}
-.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:#E6F4DD;color:#256E02;margin-left:8px;vertical-align:2px}
-.links{display:grid;gap:8px}
-.link{display:flex;gap:8px;align-items:center}
-.link label{width:140px;flex:none;font-size:13px;color:var(--muted)}
-.link input{flex:1;min-width:0;font:13px ui-monospace,Consolas,monospace;padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--soft);color:var(--ink)}
-.hint{font-size:13px;color:var(--muted);margin-top:10px}
-.signin{max-width:380px;margin:60px auto;display:grid;gap:12px}
-.signin input{font:16px Outfit,system-ui,sans-serif;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink)}
+button.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+button.danger{border-color:var(--red);color:var(--red)}
+button.armed{background:var(--red);border-color:var(--red);color:#fff}
+button.small{font-size:13px;padding:6px 10px}
+.signin{display:grid;gap:12px}
+.signin input{font:16px Outfit,system-ui,sans-serif;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
 .err{color:var(--red);font-size:14px;min-height:20px}
-.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--navy-dark);color:#fff;padding:8px 16px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.hint{font-size:14px;color:var(--muted);line-height:1.45;margin-top:12px}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
 .toast.show{opacity:1}
-@media (max-width:640px){
-  .link{flex-wrap:wrap}.link label{width:100%}
-  td.btns{white-space:normal}td.btns button{margin:3px 0 0 4px}
-  .kpis .actions{margin-left:0}
-}
 </style>
 </head>
 <body>
-<header><h1>Live Poll Admin</h1><span class="mode" id="mode"></span></header>
+<header><img src="navigator-forum-logo.png" alt="Transfinder Navigator Forum" width="138" height="48"></header>
 <main id="app"></main>
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="config.js"></script>
@@ -70,20 +59,28 @@ tr.live td:first-child{box-shadow:inset 4px 0 0 var(--green)}
 <script>
 const app = document.getElementById('app');
 const Q = Poll.questions;
-let code = null, current = -1, counts = {};
-document.getElementById('mode').textContent = Poll.live ? 'Live (Supabase)' : 'Demo mode';
+const site = Poll.voteUrl().replace(/\/(index\.html)?$/, '');
+let code = null, counts = {};
 
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2200);
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2400);
 }
-function ss(k, v) { try { v === undefined ? (v = sessionStorage.getItem(k)) : (v === null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v)); } catch (e) { v = null; } return v; }
+function ss(k, v) {
+  try {
+    if (v === undefined) return sessionStorage.getItem(k);
+    v === null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v);
+  } catch (e) {}
+  return null;
+}
+const totalOf = qi => Object.values(counts[qi] || {}).reduce((a, b) => a + b, 0);
 
 function renderSignin(msg) {
-  app.innerHTML = `<form class="card signin" id="f">
-    <h2>Admin code</h2>
-    <input id="code" type="password" autocomplete="current-password" placeholder="${Poll.live ? 'The code from setup.sql' : 'Demo code: demo'}" required>
+  app.innerHTML = `<h1>Poll admin</h1>
+  <form class="card signin" id="f">
+    <label for="code">Admin code</label>
+    <input id="code" type="password" autocomplete="current-password" required>
     <button class="primary" type="submit">Sign in</button>
     <div class="err">${Poll.esc(msg || '')}</div></form>`;
   document.getElementById('f').onsubmit = async e => {
@@ -97,74 +94,42 @@ function renderSignin(msg) {
   document.getElementById('code').focus();
 }
 
-const totalOf = qi => Object.values(counts[qi] || {}).reduce((a, b) => a + b, 0);
-
-function base() { return new URL('results.html', location.href).href.split('?')[0]; }
-function slideUrl(n) { return `${base()}?q=${n}&key=${encodeURIComponent(code)}`; }
-
 function render() {
   const all = Q.reduce((s, _, i) => s + totalOf(i), 0);
-  app.innerHTML = `
+  const shortSite = site.replace(/^https?:\/\//, '');
+  app.innerHTML = `<h1>Poll admin</h1>
   <section class="card">
-    <div class="kpis">
-      <div class="kpi"><b>${current >= 0 && Q[current] ? 'Q' + (current + 1) : 'Closed'}</b><span>Live question</span></div>
-      <div class="kpi"><b>${current >= 0 ? totalOf(current) : '–'}</b><span>Answers on it</span></div>
-      <div class="kpi"><b>${all}</b><span>Answers in all</span></div>
-      <div class="actions">
-        <button data-act="close" ${current < 0 ? 'disabled' : ''}>Close voting</button>
-        <button data-act="csv">Download CSV</button>
-        <button class="danger" data-act="clearall">Clear all results</button>
-      </div>
+    <h2>Responses so far</h2>
+    ${Q.map((q, i) => `<div class="row"><span class="n">Q${i + 1}</span><span class="t">${Poll.esc(q.text)}</span><span class="c">${totalOf(i)}</span></div>`).join('')}
+    <div class="actions">
+      <button data-act="csv">Download results</button>
+      <button class="danger" data-act="reset" ${all ? '' : 'disabled'}>Reset all responses</button>
     </div>
+    <p class="hint">Reset after each presentation. Download first if you want to keep the results.</p>
   </section>
   <section class="card">
-    <h2>Questions</h2>
-    <table><thead><tr><th>#</th><th>Question</th><th style="text-align:right">Answers</th><th></th></tr></thead><tbody>
-    ${Q.map((q, i) => `<tr class="${i === current ? 'live' : ''}">
-      <td>${i + 1}</td>
-      <td>${Poll.esc(q.text)}${i === current ? '<span class="badge">Live</span>' : ''}</td>
-      <td class="n">${totalOf(i)}</td>
-      <td class="btns">
-        <button class="primary" data-act="open" data-q="${i}" ${i === current ? 'disabled' : ''}>Open</button>
-        <button data-act="view" data-q="${i}">View</button>
-        <button class="danger" data-act="clear" data-q="${i}">Clear</button>
-      </td></tr>`).join('')}
-    </tbody></table>
-  </section>
-  <section class="card">
-    <h2>Links for your slides</h2>
-    <div class="links">
-      <div class="link"><label>Vote page (QR)</label><input readonly value="${Poll.esc(Poll.voteUrl())}"><button data-copy>Copy</button></div>
-      <div class="link"><label>Join slide</label><input readonly value="${Poll.esc(slideUrl(0))}"><button data-copy>Copy</button></div>
-      ${Q.map((_, i) => `<div class="link"><label>Question ${i + 1} slide</label><input readonly value="${Poll.esc(slideUrl(i + 1))}"><button data-copy>Copy</button></div>`).join('')}
-    </div>
-    <p class="hint">Put each slide link in a PowerPoint Web Viewer box. When the slide shows, that question opens on every phone. These links hold your admin code, so keep the deck private.</p>
-  </section>
-  <p class="hint" style="text-align:center"><button data-act="signout">Sign out</button></p>`;
-}
-
-// Two-step buttons: the first click arms, the second click acts.
-function armed(btn) {
-  if (btn.classList.contains('armed')) return true;
-  const label = btn.textContent;
-  btn.classList.add('armed'); btn.textContent = 'Click again to clear';
-  setTimeout(() => { if (btn.isConnected) { btn.classList.remove('armed'); btn.textContent = label; } }, 3500);
-  return false;
+    <h2>Slide links</h2>
+    ${Q.map((q, i) => `<div class="row"><span class="n">Q${i + 1}</span>
+      <span class="t"><a href="${site}/q${i + 1}" target="_blank" rel="noopener">${Poll.esc(shortSite)}/q${i + 1}</a></span>
+      <button class="small" data-copy="${site}/q${i + 1}">Copy</button></div>`).join('')}
+    <p class="hint">Put each link on its question's slide. Clicking it opens the question on everyone's phone and shows the live results.</p>
+  </section>`;
 }
 
 function csv() {
-  const rows = [['Question #', 'Question', 'Choice', 'Answers', 'Percent']];
+  const rows = [['Question #', 'Question', 'Choice', 'Percent']];
   Q.forEach((q, i) => {
     const t = totalOf(i);
     q.choices.forEach((c, j) => {
       const n = (counts[i] || {})[j] || 0;
-      rows.push([i + 1, q.text, c, n, t ? Math.round(n / t * 100) + '%' : '0%']);
+      rows.push([i + 1, q.text, c, t ? Math.round(n / t * 100) + '%' : '0%']);
     });
+    rows.push([i + 1, q.text, 'Responses', t]);
   });
   const text = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([text], { type: 'text/csv' }));
-  a.download = `live-poll-results-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `poll-results-${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
@@ -172,34 +137,35 @@ function csv() {
 app.addEventListener('click', async e => {
   const cp = e.target.closest('[data-copy]');
   if (cp) {
-    const input = cp.previousElementSibling;
-    try { await navigator.clipboard.writeText(input.value); } catch (err) { input.select(); document.execCommand('copy'); }
-    toast('Link copied'); return;
+    try { await navigator.clipboard.writeText(cp.dataset.copy); toast('Link copied'); }
+    catch (err) { toast(cp.dataset.copy); }
+    return;
   }
   const b = e.target.closest('[data-act]');
   if (!b) return;
-  const act = b.dataset.act, q = b.dataset.q != null ? Number(b.dataset.q) : null;
-  if (b.classList.contains('armed')) b.classList.remove('armed');   // second click: act, and let the view redraw
-  else if (act === 'clear' || act === 'clearall') { armed(b); return; }
-  try {
-    let r = 'ok';
-    if (act === 'open') { r = await Poll.setCurrent(code, q); if (r === 'ok') toast(`Question ${q + 1} is open on every phone`); }
-    else if (act === 'close') { r = await Poll.setCurrent(code, -1); if (r === 'ok') toast('Voting closed'); }
-    else if (act === 'view') { window.open(`${base()}?q=${q + 1}`, '_blank'); return; }
-    else if (act === 'csv') { csv(); return; }
-    else if (act === 'signout') { ss('livepoll-code', null); code = null; renderSignin(); return; }
-    else if (act === 'clear') { r = await Poll.clear(code, q); if (r === 'ok') toast(`Question ${q + 1} cleared`); }
-    else if (act === 'clearall') { r = await Poll.clear(code, null); if (r === 'ok') toast('All results cleared'); }
-    if (r === 'denied') { ss('livepoll-code', null); renderSignin('The admin code changed. Sign in again.'); return; }
+  if (b.dataset.act === 'csv') { csv(); return; }
+  if (b.dataset.act === 'reset') {
+    // Two clicks: the first arms the button, the second resets.
+    if (!b.classList.contains('armed')) {
+      b.classList.add('armed'); b.textContent = 'Click again to reset';
+      setTimeout(() => { if (b.isConnected && b.classList.contains('armed')) { b.classList.remove('armed'); b.textContent = 'Reset all responses'; } }, 4000);
+      return;
+    }
+    b.classList.remove('armed');
+    try {
+      const r = await Poll.clear(code, null);
+      if (r === 'denied') { ss('livepoll-code', null); renderSignin('The admin code changed. Sign in again.'); return; }
+      await Poll.setCurrent(code, -1);   // also close voting on the phones
+      toast('All responses reset');
+    } catch (err) { toast('Cannot reach the poll server'); }
     await refresh();
-  } catch (err) { toast('Cannot reach the poll server'); }
+  }
 });
 
 async function refresh() {
   if (!code) return;
   try {
-    [current, counts] = await Promise.all([Poll.current(), Poll.counts(null)]);
-    // Keep an armed button armed: skip the redraw while one is waiting for its second click.
+    counts = await Poll.counts(null);
     if (!app.querySelector('.armed')) render();
   } catch (err) { /* keep the last view */ }
 }
@@ -210,7 +176,7 @@ async function start() {
   if (!subscribed) { subscribed = true; Poll.subscribe(refresh); }
 }
 
-if (!Poll.ready) app.innerHTML = '<div class="card">The Supabase library did not load. Check the internet connection.</div>';
+if (!Poll.ready) app.innerHTML = '<div class="card">The poll library did not load. Check the internet connection.</div>';
 else {
   const saved = ss('livepoll-code');
   if (saved) { code = saved; start(); } else renderSignin();

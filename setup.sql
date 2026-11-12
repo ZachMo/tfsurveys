@@ -99,3 +99,15 @@ exception when duplicate_object then null; end $$;
 do $$ begin
   alter publication supabase_realtime add table public.poll_state;
 exception when duplicate_object then null; end $$;
+
+-- 5. Question links -------------------------------------------------------
+-- tfsurveys.com/q1, /q2 ... call this to make that question live on every phone.
+-- No code needed, so slide links hold no secret. Clearing results still needs the code.
+create or replace function public.show_question(p_question int)
+returns text language plpgsql security definer set search_path = public as $$
+begin
+  if p_question < -1 or p_question > 49 then return 'invalid'; end if;
+  update poll_state set current_question = p_question, updated_at = now() where id = 1;
+  return 'ok';
+end $$;
+grant execute on function public.show_question(int) to anon, authenticated;

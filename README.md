@@ -1,70 +1,55 @@
 # Live Poll
 
-Attendees scan a QR code on your slide and vote on their phones. The results show up live on the slide.
+Attendees scan a QR code and vote on their phones. The results show up live on screen.
 
-| File | Who uses it |
+## How it works
+
+You use three things:
+
+| Link | What it does |
 |---|---|
-| `index.html` | Attendees. The QR code opens this page. |
-| `results.html` | Your slides. Live bars plus the QR code. |
-| `admin.html` | You. Open questions, close voting, download results, clear results. |
-| `config.js` | Your questions and Supabase keys. |
-| `setup.sql` | Run once in Supabase. |
+| `tfsurveys.com/q1` … `/q5` | One link per question. Opening it makes that question live on every phone and shows the live results and the QR code. |
+| `tfsurveys.com` | The vote page. The QR code opens it. Phones always show the live question, so attendees scan only once. |
+| `tfsurveys.com/admin` | Your page. See response counts, download results, and reset all responses. Needs your admin code. |
 
-## Try it first (demo mode)
+## During a presentation
 
-With blank Supabase keys, the poll runs in demo mode. Votes stay in one browser, so phones can't join. The admin code is `demo`.
+1. On each question's slide, add a link to that question, such as `tfsurveys.com/q3`. In PowerPoint, select a shape or text and press **Ctrl+K**.
+2. Before you start, open Chrome and press **F11** for full screen. The links then open there.
+3. At each question, click the link. The question opens on everyone's phone, and the results fill the screen.
+4. Press **Alt+Tab** to return to PowerPoint.
 
-## Setup (about 20 minutes)
+The results show percentages only. The slide links hold no secret, so the deck is safe to share.
 
-### 1. Create the Supabase project
-1. Sign up at supabase.com. The free plan is enough.
-2. Click **New project**. Pick a name, a database password, and a US region.
-3. Open **SQL Editor > New query** and paste in all of `setup.sql`.
-4. Find `CHANGE-ME-to-a-long-code` and replace it with your own admin code. Make it long.
-5. Click **Run**. You should see "Success. No rows returned."
-6. Open **Project Settings > API**. Copy the **Project URL** and the **anon public** key into `config.js`.
+## After a presentation
 
-### 2. Write your questions
-Edit the `questions` list in `config.js`. Each question can have up to 12 choices. Keep the choices short, because they need to fit on one line of the slide.
+1. Open `tfsurveys.com/admin` and sign in.
+2. Click **Download results** if you want to keep them.
+3. Click **Reset all responses** twice. The second click confirms. This also closes voting on the phones.
 
-### 3. Put the folder online (GitHub Pages)
-This folder is its own git repo: `ZachMo/tfsurveys`. Everything in it is public, so keep the admin code out of it.
+## Change the questions
 
-To publish a change, commit and push:
-```
-git add -A
-git commit -m "New questions"
-git push
-```
-GitHub publishes in about a minute, but browsers can keep the old copy for up to 10 minutes. Change questions well before a talk.
-
-### 3b. Connect tfsurveys.com
-1. At your registrar, add these DNS records:
-   - `A` records for `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`
-   - `CNAME` for `www` → `zachmo.github.io`
-2. In the repo, open **Settings > Pages**. Check that the custom domain reads `tfsurveys.com`.
-3. When the certificate is ready, tick **Enforce HTTPS**. This can take from minutes up to a day. The PowerPoint Web Viewer needs HTTPS.
-
-`config.js` already points the QR code at `https://tfsurveys.com`. If you choose a subdomain instead, such as `poll.tfsurveys.com`, change `voteUrl` to match.
-
-### 4. Build the slides
-1. Open `https://tfsurveys.com/admin` and sign in with your admin code.
-2. Under **Links for your slides**, copy the link for each slide.
-3. In PowerPoint, click **Insert > Get Add-ins**. Search for **Web Viewer** and add it.
-4. Paste the link into the Web Viewer box and stretch the box to fill the slide.
-5. Repeat for each slide: one Join slide, then one slide per question.
-
-When a question slide shows, that question opens on every phone. The slide links hold your admin code, so don't send the deck to clients.
-
-**Backup plan:** If the add-in has trouble, present `results.html` in a browser tab. Use `admin.html` on your phone to open each question.
-
-## After the presentation
-1. In `admin.html`, click **Download CSV** to keep the results.
-2. Click **Clear all results** twice. The second click confirms.
+1. Edit the `questions` list in `config.js`. Up to 10 questions, with up to 12 choices each.
+2. Reset all responses, because old answers stay tied to the question numbers.
+3. Publish:
+   ```
+   git pull --rebase
+   git add -A
+   git commit -m "New questions"
+   git push
+   ```
+   GitHub publishes in about a minute. Browsers can keep the old copy for up to 10 minutes, so change questions well before a talk.
 
 ## Good to know
-- **Run a rehearsal the day before.** Supabase pauses free projects after 7 days without use. If yours is paused, click **Restore** in the Supabase dashboard. It takes a few minutes.
-- Attendees can change their answer while the question is open. Each phone counts once per question.
-- Each phone gets a random ID. Someone who clears their browser data can vote again. That's fine for a poll, but not for a binding vote.
-- To change the admin code, run this in the SQL Editor: `update poll_admin set code = 'new-code';`
-- URL options for `results.html`: `?q=2` shows question 2 without opening it. `&qr=0` hides the QR code. `&theme=dark` gives a dark slide.
+
+- **Run a rehearsal the day before.** Supabase pauses free projects after 7 days without use. If yours is paused, click **Restore** in the Supabase dashboard.
+- Attendees can change their answer while their question is live. Each phone counts once per question.
+- Anyone who knows a question link could switch the live question. They can't see the admin page or reset results.
+- The admin code is in `LivePoll-private\ADMIN-CODE.txt`, outside this public repo. To change it, run in the Supabase SQL Editor: `update poll_admin set code = 'new-code';`
+- `tfsurveys.com/results.html` with no `?q=` follows whichever question is live. Add `&qr=0` to a results link to hide the QR code, or `&theme=dark` for a dark screen.
+
+## Setup from scratch
+
+1. Create a Supabase project. Paste all of `setup.sql` into **SQL Editor**, set your own admin code, and click **Run**.
+2. Put the project URL and the anon public key into `config.js`.
+3. Host this folder on GitHub Pages. For a custom domain, add four `A` records for `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153` and `185.199.111.153`, plus a `CNAME` for `www` → `<user>.github.io`. Then set the domain in **Settings > Pages** and tick **Enforce HTTPS**.

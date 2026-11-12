@@ -112,6 +112,14 @@
       return data;
     },
 
+    // Question links (/q1, /q2 ...): make question q live on every phone. No code needed.
+    async show(q) {
+      if (!LIVE) { const s = dLoad(); s.current = q; dSave(s); return 'ok'; }
+      const { data, error } = await sb.rpc('show_question', { p_question: q });
+      fail(error);
+      return data;
+    },
+
     // q: 0-based question, or null for all. Returns 'ok' or 'denied'.
     async clear(code, q) {
       if (!LIVE) {
